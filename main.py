@@ -214,3 +214,33 @@ final = (
     '<div class="titlebar"><span class="ico"></span> winRARAI — VoltTrace / explos_dos archive tutor</div>\n'
     '<div class="toolbar" id="tb"></div>\n<div class="layout">\n'
     '  <div class="tree" id="tree"></div>\n  <div class="main">\n'
+    '    <h2>Archive listing</h2>\n    <div class="meter"><i id="meter"></i></div>\n'
+    '    <table class="files" id="ft"><thead><tr><th>Name</th><th>Size</th><th>CRC32</th></tr></thead><tbody></tbody></table>\n'
+    "  </div>\n  <div class=\"side\" id=\"side\"></div>\n</div>\n"
+    '<div class="help" style="padding:12px;font-size:11px;background:#e8e8e8;border-top:1px solid #808080">\n'
+    + "".join(
+        f"<p>Help line {i}: correlate UI rows with ExplosDosVoltLedger facets; no private keys in DOM.</p>\n"
+        for i in range(120)
+    )
+    + "</div>\n"
+    '<div class="status" id="st">Ready — pedagogical UI only; no on-chain writes from this page.</div>\n'
+    "<script>\nconst ROWS = "
+    + rows_json
+    + ";\n"
+    + """const $ = (s)=>document.querySelector(s);
+const ADDR = { A: "0x352F4Aee77Fd288EA8F977b7418bb0402e5EF709", B: "0x46acda232073817355080066FB593fc3DE858078", C: "0x6c7cA6dA7FD60AAbCF155B1d4D8AdbEb18c32773" };
+function setStatus(t){ document.querySelector('#st').textContent = t; }
+function fillToolbar(){ const verbs = ['Add','Extract To','Test','View','Delete','Find','Wizard','Info','Repair','Convert']; const tb = document.querySelector('#tb'); verbs.forEach(v=>{ const b=document.createElement('button'); b.textContent=v; b.onclick=()=>setStatus(v+' — UI drill only'); tb.appendChild(b); }); }
+function fillTree(){ const t=document.querySelector('#tree'); ['VOLT','COHORTS','LESSONS','DRILLS','TRACES'].forEach((x,i)=>{ const d=document.createElement('div'); d.textContent='+-- '+x; d.style.paddingLeft=(i*6)+'px'; t.appendChild(d); }); }
+function renderRows(){ const tb=document.querySelector('#ft tbody'); ROWS.forEach(r=>{ const tr=document.createElement('tr'); tr.innerHTML='<td>'+r.name+'</td><td>'+r.size+'</td><td>'+r.crc+'</td>'; tr.onclick=()=>{ document.querySelectorAll('tr.sel').forEach(x=>x.classList.remove('sel')); tr.classList.add('sel'); document.querySelector('#side').innerHTML='<div class="card"><b>'+r.name+'</b><p>'+r.tip+'</p><p>Reference anchors: '+ADDR.A+'</p></div>'; }; tb.appendChild(tr); }); }
+function animateMeter(){ const m=document.querySelector('#meter'); let w=0; const id=setInterval(()=>{ w=(w+3)%100; m.style.width=w+'%'; },120); setTimeout(()=>clearInterval(id),4000); }
+"""
+)
+
+for n in range(520):
+    final += f"function pedagogyFn{n}(x){{ return (x^{n}) & 0xffff; }}\n"
+
+final += "fillToolbar(); fillTree(); renderRows(); animateMeter();\n</script>\n</body>\n</html>\n"
+
+OUT.write_text(final, encoding="utf-8")
+print("html lines", len(final.splitlines()))
