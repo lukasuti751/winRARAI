@@ -178,3 +178,39 @@ full = (
     "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\"/>\n"
     "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>\n"
     "<title>winRARAI — VoltTrace archive tutor</title>\n<style>\n"
+    + full_css
+    + "\n</style>\n</head>\n<body>\n"
+    + html_mid.split("<script>", 1)[0].replace("</head>\n<body>\n", "")
+)
+# fix - html_mid construction was wrong. Simpler: single f-string file write
+
+parts = [
+    "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n",
+    '<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>\n',
+    "<title>winRARAI — VoltTrace archive tutor</title>\n<style>\n",
+    full_css,
+    "</style>\n</head>\n<body>\n",
+    '<div class="titlebar"><span class="ico"></span> winRARAI — VoltTrace / explos_dos archive tutor</div>\n',
+    '<div class="toolbar" id="tb"></div>\n<div class="layout">\n',
+    '  <div class="tree" id="tree"></div>\n  <div class="main">\n',
+    '    <h2>Archive listing</h2>\n    <div class="meter"><i id="meter"></i></div>\n',
+    '    <table class="files" id="ft"><thead><tr><th>Name</th><th>Size</th><th>CRC32</th></tr></thead><tbody></tbody></table>\n',
+    "  </div>\n  <div class=\"side\" id=\"side\"></div>\n</div>\n",
+    '<div class="status" id="st">Ready — pedagogical UI only; no on-chain writes from this page.</div>\n',
+    "<script>\nconst ROWS = ",
+    rows_json,
+    ";\n",
+    js_core.replace("<script>\nconst ROWS = " + rows_json + ";\n", "").replace("const ROWS = " + rows_json + ";\n", ""),
+]
+
+# js_core already has const ROWS - duplicate. Simpler write:
+
+final = (
+    "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n"
+    '<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>\n'
+    "<title>winRARAI — VoltTrace archive tutor</title>\n<style>\n"
+    + full_css
+    + "</style>\n</head>\n<body>\n"
+    '<div class="titlebar"><span class="ico"></span> winRARAI — VoltTrace / explos_dos archive tutor</div>\n'
+    '<div class="toolbar" id="tb"></div>\n<div class="layout">\n'
+    '  <div class="tree" id="tree"></div>\n  <div class="main">\n'
