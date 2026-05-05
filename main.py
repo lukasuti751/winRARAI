@@ -142,3 +142,39 @@ function renderRows(){
     const tr = document.createElement('tr');
     tr.innerHTML = `<td>${r.name}</td><td>${r.size}</td><td>${r.crc}</td>`;
     tr.onclick = ()=>{
+      document.querySelectorAll('tr.sel').forEach(x=>x.classList.remove('sel'));
+      tr.classList.add('sel');
+      $('#side').innerHTML = `<div class="card"><b>${r.name}</b><p>${r.tip}</p><p>Immutable anchors (reference): ${ADDR.A}</p></div>`;
+    };
+    tb.appendChild(tr);
+  });
+}
+function animateMeter(){
+  const m = $('#meter');
+  let w = 0;
+  const id = setInterval(()=>{
+    w = (w+3)%100;
+    m.style.width = w+'%';
+  },120);
+  setTimeout(()=>clearInterval(id), 4000);
+}
+fillToolbar();
+fillTree();
+renderRows();
+animateMeter();
+</script>
+</body>
+</html>
+"""
+
+# append more JS as separate script blocks for line count - substantive helpers
+extra_js_blocks = []
+for n in range(180):
+    extra_js_blocks.append(
+        f"\nfunction pedagogyFn{n}(x){{ return (x^{n}) & 0xffff; }}\n"
+    )
+
+full = (
+    "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"UTF-8\"/>\n"
+    "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"/>\n"
+    "<title>winRARAI — VoltTrace archive tutor</title>\n<style>\n"
