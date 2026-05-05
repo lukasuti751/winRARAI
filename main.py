@@ -106,3 +106,39 @@ html_mid = (
     '  <div class="side" id="side"></div>\n'
     "</div>\n"
     '<div class="status" id="st">Ready — pedagogical UI only; no on-chain writes from this page.</div>\n'
+    f"<script>\nconst ROWS = {rows_json};\n"
+)
+
+js_core = r"""
+const $ = (s)=>document.querySelector(s);
+const ADDR = {
+  A: "0x352F4Aee77Fd288EA8F977b7418bb0402e5EF709",
+  B: "0x46acda232073817355080066FB593fc3DE858078",
+  C: "0x6c7cA6dA7FD60AAbCF155B1d4D8AdbEb18c32773"
+};
+function setStatus(t){ $('#st').textContent = t; }
+function fillToolbar(){
+  const verbs = ['Add','Extract To','Test','View','Delete','Find','Wizard','Info','Repair','Convert'];
+  const tb = $('#tb');
+  verbs.forEach(v=>{
+    const b = document.createElement('button');
+    b.textContent = v;
+    b.onclick = ()=>setStatus(v+' — UI drill only (no filesystem mutation).');
+    tb.appendChild(b);
+  });
+}
+function fillTree(){
+  const t = $('#tree');
+  ['VOLT','COHORTS','LESSONS','DRILLS','TRACES'].forEach((x,i)=>{
+    const d = document.createElement('div');
+    d.textContent = '+-- '+x;
+    d.style.paddingLeft = (i*6)+'px';
+    t.appendChild(d);
+  });
+}
+function renderRows(){
+  const tb = $('#ft tbody');
+  ROWS.forEach(r=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${r.name}</td><td>${r.size}</td><td>${r.crc}</td>`;
+    tr.onclick = ()=>{
